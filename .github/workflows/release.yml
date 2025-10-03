@@ -1,42 +1,43 @@
-name: Flutter Release
+name: Flutter CI/CD
 
 on:
   push:
-    tags:
-      - 'v*.*.*'   # jalan kalau kamu push tag release, misal v1.2.0
+    branches:
+      - main   # jalan kalau push ke main
+  workflow_dispatch: # bisa trigger manual dari GitHub
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout kode
-      - uses: actions/checkout@v3
+      # 1. Checkout source code
+      - uses: actions/checkout@v4
 
       # 2. Setup Flutter
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # sesuaikan dengan versi Flutter kamu
+          flutter-version: '3.24.0' # sesuaikan dengan project
 
       # 3. Install dependencies
-      - name: Get Flutter packages
+      - name: Install dependencies
         run: flutter pub get
 
-      # 4. Ambil versi dari pubspec.yaml
-      - name: Read version from pubspec.yaml
+      # 4. Build APK (debug/release sesuai kebutuhan)
+      - name: Build APK
+        run: flutter build apk --release
+
+      # 5. Ambil versi dari pubspec.yaml
+      - name: Get version
         id: get_version
         run: |
-          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "App Version: $VERSION"
 
-      # 5. Kirim versi ke API Lumen
-      - name: Notify API about new version
+      # 6. Update versi ke API Lumen
+      - name: Update Version to API
         run: |
-          curl -X POST ${{ secrets.API_URL }}/api/version/update \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
-            -d '{
-              "platform": "Android",
-              "version": "'"$VERSION"'",
-              "min_version": "1.0.0"
-            }'
+          curl -X POST "${{ secrets.API_URL }}/version/update" \
+          -H "Content-Type: application/json" \
+          -d '{"platform":"android", "version":"${{ env.VERSION }}"}'
