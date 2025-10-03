@@ -1,0 +1,42 @@
+name: Flutter Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'   # jalan kalau kamu push tag release, misal v1.2.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout kode
+      - uses: actions/checkout@v3
+
+      # 2. Setup Flutter
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0' # sesuaikan dengan versi Flutter kamu
+
+      # 3. Install dependencies
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      # 4. Ambil versi dari pubspec.yaml
+      - name: Read version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      # 5. Kirim versi ke API Lumen
+      - name: Notify API about new version
+        run: |
+          curl -X POST ${{ secrets.API_URL }}/api/version/update \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -d '{
+              "platform": "Android",
+              "version": "'"$VERSION"'",
+              "min_version": "1.0.0"
+            }'
