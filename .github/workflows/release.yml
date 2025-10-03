@@ -3,8 +3,8 @@ name: Flutter CI/CD
 on:
   push:
     branches:
-      - main   # jalan kalau push ke main
-  workflow_dispatch: # bisa trigger manual dari GitHub
+      - main
+  workflow_dispatch: # bisa trigger manual
 
 jobs:
   build:
@@ -17,13 +17,13 @@ jobs:
       # 2. Setup Flutter
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0' # sesuaikan dengan project
+          flutter-version: '3.24.0' # sesuaikan versi Flutter kamu
 
       # 3. Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # 4. Build APK (debug/release sesuai kebutuhan)
+      # 4. Build APK release
       - name: Build APK
         run: flutter build apk --release
 
@@ -41,3 +41,22 @@ jobs:
           curl -X POST "${{ secrets.API_URL }}/version/update" \
           -H "Content-Type: application/json" \
           -d '{"platform":"android", "version":"${{ env.VERSION }}"}'
+
+      # 7. Upload APK ke artifacts GitHub (supaya bisa diunduh dari workflow)
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aplikasiku-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      # 8. Buat GitHub Release + Upload APK
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: "Release v${{ env.VERSION }}"
+          draft: false
+          prerelease: false
+          files: build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
