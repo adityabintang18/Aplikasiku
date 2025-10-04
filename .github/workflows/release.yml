@@ -4,30 +4,28 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # bisa trigger manual
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout source code
       - uses: actions/checkout@v4
 
-      # 2. Setup Flutter
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # 4. Build APK release
       - name: Build APK
         run: flutter build apk --release
 
-      # 5. Ambil versi dari pubspec.yaml
       - name: Get version
         id: get_version
         run: |
@@ -35,29 +33,28 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "App Version: $VERSION"
 
-      # 6. Update versi ke API Lumen
+      - name: Rename APK
+        run: |
+          mv build/app/outputs/flutter-apk/app-release.apk \
+             build/app/outputs/flutter-apk/Aplikasiku-${{ env.VERSION }}.apk
+
       - name: Update Version to API
         run: |
-          curl -X POST "${{ secrets.API_URL }}/version/update" \
+          curl -X POST "${{ secrets.API_URL }}/api/version/update" \
           -H "Content-Type: application/json" \
           -d '{"platform":"android", "version":"${{ env.VERSION }}"}'
 
-      # 7. Upload APK ke artifacts GitHub (supaya bisa diunduh dari workflow)
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: aplikasiku-apk
           path: build/app/outputs/flutter-apk/Aplikasiku-${{ env.VERSION }}.apk
 
-      # 8. Buat GitHub Release + Upload APK
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSION }}
           name: "Release v${{ env.VERSION }}"
-          draft: false
-          prerelease: false
           files: build/app/outputs/flutter-apk/Aplikasiku-${{ env.VERSION }}.apk
-      
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
