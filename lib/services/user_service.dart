@@ -4,7 +4,7 @@ import 'package:aplikasiku/services/auth_service.dart';
 import 'package:aplikasiku/services/api_client.dart';
 
 class UserService {
-  static const String _baseUrl = 'http://192.168.1.10:8000';
+  static const String _baseUrl = 'https://api-mobile.indoprosmamandiri.my.id';
   static final ApiClient _api = ApiClient(baseUrl: _baseUrl);
 
   static Future<Map<String, dynamic>?> getProfile() async {

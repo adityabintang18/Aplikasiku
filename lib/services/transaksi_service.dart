@@ -5,8 +5,8 @@ import 'package:aplikasiku/services/api_client.dart';
 import 'package:http/http.dart' as http;
 
 class TransaksiService {
-  static final ApiClient _apiClient =
-      ApiClient(baseUrl: 'http://192.168.1.10:8000/finansial');
+  static final ApiClient _apiClient = ApiClient(
+      baseUrl: 'https://api-mobile.indoprosmamandiri.my.id/finansial');
 
   // context wajib dikirim dari widget, karena ApiClient butuh context untuk cek token expired
   static Future<List<TransaksiModel>> getAll(BuildContext context) async {
@@ -42,7 +42,8 @@ class TransaksiService {
   static Future<List<Map<String, dynamic>>> getMonthlySummary(
       DateTime date, BuildContext context,
       {int? jenisKategori}) async {
-    final queryJenis = jenisKategori != null ? '&jenis_kategori=$jenisKategori' : '';
+    final queryJenis =
+        jenisKategori != null ? '&jenis_kategori=$jenisKategori' : '';
     final endpoint = 'summary?month=${date.month}&year=${date.year}$queryJenis';
     print('[TransaksiService] Request GET ke ${_apiClient.baseUrl}/$endpoint');
     final response = await _apiClient.get(endpoint, context);
@@ -59,8 +60,10 @@ class TransaksiService {
   static Future<List<Map<String, dynamic>>> getCalendar(
       DateTime date, BuildContext context,
       {int? jenisKategori}) async {
-    final queryJenis = jenisKategori != null ? '&jenis_kategori=$jenisKategori' : '';
-    final endpoint = 'calendar?month=${date.month}&year=${date.year}$queryJenis';
+    final queryJenis =
+        jenisKategori != null ? '&jenis_kategori=$jenisKategori' : '';
+    final endpoint =
+        'calendar?month=${date.month}&year=${date.year}$queryJenis';
     print('[TransaksiService] Request GET ke ${_apiClient.baseUrl}/$endpoint');
     final response = await _apiClient.get(endpoint, context);
     print('[TransaksiService] Response status: ${response.statusCode}');

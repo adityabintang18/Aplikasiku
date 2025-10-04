@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'api_client.dart';
 
 class StatisticsService {
-  final ApiClient _apiClient = ApiClient(baseUrl: 'http://192.168.1.10:8000/');
+  final ApiClient _apiClient =
+      ApiClient(baseUrl: 'https://api-mobile.indoprosmamandiri.my.id/');
 
   Future<Map<String, dynamic>> getStatistics({BuildContext? context}) async {
     final response = await _apiClient.get('statistics/overview', context);

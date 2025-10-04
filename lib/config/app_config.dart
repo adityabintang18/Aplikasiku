@@ -15,7 +15,7 @@ class AppConfig {
   ///   "message": "Versi baru tersedia. Silakan update untuk melanjutkan."
   /// }
   static const String versionCheckUrl =
-      "http://192.168.1.10:8000/app/version"; // TODO: set real endpoint
+      "https://api-mobile.indoprosmamandiri.my.id/app/version"; // TODO: set real endpoint
 
   /// Store URLs fallback if server does not provide platform-specific links
   static const String playStoreUrl =

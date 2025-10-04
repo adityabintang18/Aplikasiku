@@ -29,7 +29,8 @@ class _NotesPageState extends State<NotesPage> {
       _errorMessage = null;
     });
     try {
-      _notes = await NotesService(baseUrl: "http://192.168.1.10:8000")
+      _notes = await NotesService(
+              baseUrl: "https://api-mobile.indoprosmamandiri.my.id")
           .fetchNotes(context);
     } catch (e) {
       _errorMessage = 'Gagal memuat catatan: $e';
@@ -70,7 +71,8 @@ class _NotesPageState extends State<NotesPage> {
             onPressed: () async {
               Navigator.pop(context);
               try {
-                await NotesService(baseUrl: "http://192.168.1.10:8000")
+                await NotesService(
+                        baseUrl: "https://api-mobile.indoprosmamandiri.my.id")
                     .deleteNote(_notes[index].id!, context);
                 setState(() => _notes.removeAt(index));
               } catch (e) {
@@ -241,14 +243,18 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
     });
     try {
       if (widget.note == null) {
-        await NotesService(baseUrl: "http://192.168.1.10:8000").addNote(
+        await NotesService(
+                baseUrl: "https://api-mobile.indoprosmamandiri.my.id")
+            .addNote(
           _noteController.text.trim(),
           _titleController.text.trim(),
           context,
           tanggalCatatan: _dateController.text,
         );
       } else {
-        await NotesService(baseUrl: "http://192.168.1.10:8000").editNote(
+        await NotesService(
+                baseUrl: "https://api-mobile.indoprosmamandiri.my.id")
+            .editNote(
           widget.note!.id!,
           _noteController.text.trim(),
           context,

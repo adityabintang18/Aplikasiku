@@ -24,7 +24,7 @@ class VersionCheckResult {
 
 class VersionService {
   static const String _baseUrl =
-      "http://192.168.1.10:8000/api"; // ganti sesuai server
+      "https://api-mobile.indoprosmamandiri.my.id/api"; // ganti sesuai server
 
   /// update versi saat build/release
   static Future<void> updateVersion() async {

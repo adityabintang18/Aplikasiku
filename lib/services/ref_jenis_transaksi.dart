@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:aplikasiku/services/api_client.dart';
 
 class RefService {
-  static final ApiClient _api = ApiClient(baseUrl: "http://192.168.1.10:8000");
+  static final ApiClient _api =
+      ApiClient(baseUrl: "https://api-mobile.indoprosmamandiri.my.id");
 
   static Future<List<JenisTransaksiModel>> getJenisTransaksi(
       BuildContext context) async {

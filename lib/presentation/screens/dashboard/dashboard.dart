@@ -33,7 +33,8 @@ class _DashboardState extends State<Dashboard> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       AuthService.checkAndLogoutIfExpired(context);
     });
-    apiService = CalenderLiturgicalService(baseUrl: "http://192.168.1.10:8000");
+    apiService = CalenderLiturgicalService(
+        baseUrl: "https://api-mobile.indoprosmamandiri.my.id");
     _fetchData();
   }
 

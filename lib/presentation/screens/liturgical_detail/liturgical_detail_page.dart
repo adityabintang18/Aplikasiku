@@ -208,8 +208,8 @@ class _LiturgicalReadingAyatCardState extends State<LiturgicalReadingAyatCard> {
   bool loading = false;
   String? error;
 
-  final CalenderLiturgicalService _service =
-      CalenderLiturgicalService(baseUrl: "http://192.168.1.10:8000");
+  final CalenderLiturgicalService _service = CalenderLiturgicalService(
+      baseUrl: "https://api-mobile.indoprosmamandiri.my.id");
 
   @override
   void initState() {

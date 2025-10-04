@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:aplikasiku/app_routes.dart';
 
 class AuthService {
-  static const String baseUrl = "http://192.168.1.10:8000";
+  static const String baseUrl = "https://api-mobile.indoprosmamandiri.my.id";
 
   static final ApiClient _api = ApiClient(baseUrl: baseUrl);
 
